@@ -76,7 +76,7 @@ export function createRouterMatcher(
     originalRecord?: RouteRecordMatcher
   ) {
     // used later on to remove by name
-    const isRootAdd = !originalRecord
+    const isRootAdd = !originalRecord // 是否根节点
     const mainNormalizedRecord = normalizeRouteRecord(record)
     if (__DEV__) {
       checkChildMissingNameWithEmptyPath(mainNormalizedRecord, parent)
@@ -88,6 +88,7 @@ export function createRouterMatcher(
     const normalizedRecords: (typeof mainNormalizedRecord)[] = [
       mainNormalizedRecord,
     ]
+    // 如果record存在alias代表是父路由或者本路由的副本
     if ('alias' in record) {
       const aliases =
         typeof record.alias === 'string' ? [record.alias] : record.alias!
@@ -119,6 +120,7 @@ export function createRouterMatcher(
       // Build up the path for nested routes if the child isn't an absolute
       // route. Only add the / delimiter if the child path isn't empty and if the
       // parent path doesn't have a trailing slash
+      // 如果父路由存在，且子路由不是以/开头，则将父路由和子路由拼起来 /parent/child
       if (parent && path[0] !== '/') {
         const parentPath = parent.record.path
         const connectingSlash =
@@ -366,6 +368,7 @@ function paramsFromLocation(
 
 /**
  * Normalizes a RouteRecordRaw. Creates a copy
+ * 归一化RouteRecord对象
  *
  * @param record
  * @returns the normalized version
@@ -412,6 +415,10 @@ function normalizeRecordProps(
     for (const name in record.components)
       propsObject[name] = typeof props === 'boolean' ? props : props[name]
   }
+
+  /**
+   * 返回的对象 { [componentName]: props[componentName] }
+  */
 
   return propsObject
 }
